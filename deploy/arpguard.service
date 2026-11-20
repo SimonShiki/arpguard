@@ -1,0 +1,38 @@
+[Unit]
+Description=ARPGuard - Event-driven ARP spoofing monitor and dynamic gateway protector (paired with arpwatch)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+RuntimeDirectory=arpguard
+LogsDirectory=arpguard
+ExecStart=/usr/local/bin/arpguard watch --workdir /run/arpguard --log-file /var/log/arpguard/incidents.jsonl
+Restart=on-failure
+RestartSec=3
+Nice=5
+MemoryMax=16M
+
+# Privilege & Capability Hardening
+# - CAP_NET_RAW: arpwatch pcap packet capture & arping L2 probes
+# - CAP_NET_ADMIN: ip neigh permanent gateway pinning & optional arptables rules
+# - CAP_KILL: sending SIGHUP to arpwatch child to flush arp.dat
+# - CAP_SETUID/CAP_SETGID/CAP_DAC_OVERRIDE/CAP_DAC_READ_SEARCH: delivering desktop notifications via runuser to /run/user/<uid>/bus
+CapabilityBoundingSet=CAP_NET_RAW CAP_NET_ADMIN CAP_KILL CAP_SETUID CAP_SETGID CAP_DAC_OVERRIDE CAP_DAC_READ_SEARCH
+AmbientCapabilities=CAP_NET_RAW CAP_NET_ADMIN CAP_KILL CAP_SETUID CAP_SETGID CAP_DAC_OVERRIDE CAP_DAC_READ_SEARCH
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target

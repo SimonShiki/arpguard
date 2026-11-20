@@ -1,0 +1,15 @@
+# Rust build artifacts
+/target/
+
+# Runtime / test data & logs
+*.dat
+*.pcap
+*.jsonl
+
+# Editor & OS files
+.DS_Store
+*.swp
+*.swo
+*~
+.idea/
+.vscode/

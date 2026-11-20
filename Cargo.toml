@@ -1,0 +1,13 @@
+[package]
+name = "arpguard"
+version = "0.1.0"
+edition = "2021"
+description = "Tiny event-driven ARP spoofing monitor and dynamic gateway protector paired with arpwatch"
+license = "MIT"
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
